@@ -1,14 +1,7 @@
-import { useEffect, useRef, useState } from 'react'
+import { useEffect, useState } from 'react'
 import { personal } from '../data/portfolio'
 import Reveal from './Reveal'
-import {
-  CameraIcon,
-  DownloadIcon,
-  MailIcon,
-  MapPinIcon,
-  TrashIcon,
-  WhatsAppIcon,
-} from './icons'
+import { DownloadIcon, MailIcon, MapPinIcon, WhatsAppIcon } from './icons'
 
 function useTypewriter(words) {
   const [index, setIndex] = useState(0)
@@ -41,54 +34,6 @@ function useTypewriter(words) {
 
 export default function Hero() {
   const typed = useTypewriter(personal.roles)
-  const [photo, setPhoto] = useState(() => {
-    try {
-      return localStorage.getItem('portfolio-photo') || null
-    } catch {
-      return null
-    }
-  })
-  const fileInputRef = useRef(null)
-  const photoKey = 'portfolio-photo'
-
-  const openPicker = () => fileInputRef.current?.click()
-
-  const onSelectFile = (e) => {
-    const file = e.target.files?.[0]
-    if (!file || !file.type.startsWith('image/')) return
-    const reader = new FileReader()
-    reader.onload = () => {
-      const img = new Image()
-      img.onload = () => {
-        const MAX = 1100
-        const scale = Math.min(1, MAX / Math.max(img.width, img.height))
-        const canvas = document.createElement('canvas')
-        canvas.width = Math.round(img.width * scale)
-        canvas.height = Math.round(img.height * scale)
-        const ctx = canvas.getContext('2d')
-        ctx.drawImage(img, 0, 0, canvas.width, canvas.height)
-        const dataUrl = canvas.toDataURL('image/jpeg', 0.86)
-        setPhoto(dataUrl)
-        try {
-          localStorage.setItem(photoKey, dataUrl)
-        } catch {
-          /* localStorage plein ou indisponible */
-        }
-      }
-      img.src = reader.result
-    }
-    reader.readAsDataURL(file)
-    e.target.value = ''
-  }
-
-  const removePhoto = () => {
-    setPhoto(null)
-    try {
-      localStorage.removeItem(photoKey)
-    } catch {
-      /* ignore */
-    }
-  }
 
   return (
     <section id="home" className="hero">
@@ -177,44 +122,12 @@ export default function Hero() {
 
       <Reveal delay={250} className="hero-avatar-wrap">
         <div className="hero-avatar">
-          {photo ? (
-            <img
-              src={photo}
-              alt="Photo de RAKOTO Noël Pricio"
-              className="hero-avatar-img"
-            />
-          ) : (
-            <span>{personal.initials}</span>
-          )}
-
-          <button
-            type="button"
-            className="hero-avatar-cam"
-            onClick={photo ? removePhoto : openPicker}
-            aria-label={
-              photo ? 'Retirer la photo' : 'Importer une photo de profil'
-            }
-            title={photo ? 'Retirer la photo' : 'Importer ma photo'}
-          >
-            {photo ? <TrashIcon size={18} /> : <CameraIcon size={18} />}
-          </button>
+          <img
+            src="/profile.jpg"
+            alt={`Photo de ${personal.fullName}`}
+            className="hero-avatar-img"
+          />
         </div>
-
-        <p className="hero-avatar-hint">
-          {photo
-            ? 'Cliquez sur la corbeille pour retirer'
-            : 'Cliquez sur l\'appareil photo pour choisir votre image'}
-        </p>
-
-        <input
-          ref={fileInputRef}
-          type="file"
-          accept="image/*"
-          aria-hidden="true"
-          tabIndex={-1}
-          style={{ display: 'none' }}
-          onChange={onSelectFile}
-        />
       </Reveal>
     </section>
   )

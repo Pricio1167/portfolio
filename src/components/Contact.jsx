@@ -1,5 +1,6 @@
 import { contactItems, personal } from '../data/portfolio'
 import Reveal from './Reveal'
+import ContactForm from './ContactForm'
 import {
   DownloadIcon,
   MailIcon,
@@ -55,6 +56,13 @@ export default function Contact() {
             )
           })}
         </div>
+
+        <Reveal delay={200}>
+          <div className="contact-form-wrap">
+            <span className="contact-form-divider">ou directement</span>
+            <ContactForm />
+          </div>
+        </Reveal>
 
         <Reveal delay={200}>
           <div className="contact-download">
