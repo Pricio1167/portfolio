@@ -123,7 +123,7 @@ export default function Hero() {
       <Reveal delay={250} className="hero-avatar-wrap">
         <div className="hero-avatar">
           <img
-            src="/profile.jpg"
+            src="/profile.jpeg"
             alt={`Photo de ${personal.fullName}`}
             className="hero-avatar-img"
           />
